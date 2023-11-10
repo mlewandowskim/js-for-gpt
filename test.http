@@ -1,0 +1,17 @@
+POST http://localhost:3000/execute
+Content-Type: application/json
+X-API-Key: d1bf8dcb-304a-455b-a08b-1b48455b5f1c
+
+{
+  "projectName": "PuppeteerHeadlineScraper",
+  "dependencies": [
+    "puppeteer"
+  ],
+  "files": [
+    {
+      "path": "index.js",
+      "content": "const puppeteer = require('puppeteer');\n\n(async () => {\n  // Launching Puppeteer browser\n  const browser = await puppeteer.launch();\n  const page = await browser.newPage();\n\n  // Navigating to wp.pl\n  await page.goto('https://www.wp.pl/');\n\n  // Selecting the headlines - selector might need an update based on the site's structure\n  const headlines = await page.$$eval('.article__title', elements => elements.map(el => el.textContent.trim()));\n\n  // Logging headlines\n  console.log('Headlines from wp.pl:', headlines);\n\n  // Closing the browser\n  await browser.close();\n})();"
+    }
+  ],
+  "entryFile": "index.js"
+}

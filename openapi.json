@@ -1,0 +1,120 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Node.js App Executor API",
+    "version": "1.0.0",
+    "description": "API to execute Node.js applications with dynamic dependencies and file creation."
+  },
+  "servers": [
+    {
+      "url": "YOUR API KEY (defined in main.js)",
+      "description": "Main server"
+    }
+  ],
+  "paths": {
+    "/execute": {
+      "post": {
+        "summary": "Execute a Node.js application",
+        "description": "Receives details of a Node.js app, sets it up, and executes it, returning the output.",
+        "operationId": "executeNodeApp",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExecuteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful execution of the Node.js application",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecuteResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized access due to invalid or missing API key"
+          },
+          "500": {
+            "description": "Internal server error during application execution"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ExecuteRequest": {
+        "type": "object",
+        "properties": {
+          "projectName": {
+            "type": "string",
+            "description": "Name of the Node.js application"
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/File"
+            }
+          },
+          "entryFile": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "projectName",
+          "dependencies",
+          "files",
+          "entryFile"
+        ]
+      },
+      "File": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "content"
+        ]
+      },
+      "ExecuteResponse": {
+        "type": "object",
+        "properties": {
+          "output": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "apiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}
